@@ -4,7 +4,7 @@ const app = express()
 const port = 3002
 
 app.post('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Initial!')
 })
 
 app.use('/user', userRouter)
