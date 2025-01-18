@@ -39,8 +39,7 @@ export default class User {
   forgot_password_token: string
   verify: UserVerifyStatus
 
-
-  bio:  string
+  bio: string
   location: string
   website: string
   username: string
