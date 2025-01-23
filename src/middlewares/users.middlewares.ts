@@ -12,39 +12,59 @@ export const loginValidator = (req: Request, res: Response, next: NextFunction) 
   } else next()
 }
 
-export const registerValidator = validate(checkSchema({
-  name: {
-    isString: true,
-    notEmpty: true,
-    trim: true,
-    isLength: {
-      options: {min: 4, max: 100}
-    }
-  },
-  email: {
-    isEmail: true,
-    notEmpty: true, 
-    trim: true
-  },
-  password: {
-    notEmpty: true,
-    isLength: {
-      options: { min: 4, max: 50 }
-    }
-  },
-  confirm_password: {
-    notEmpty: true,
-    isLength: {
-      options: { min: 4, max: 50 }
+export const registerValidator = validate(
+  checkSchema({
+    name: {
+      in: ['body'],
+      isString: {
+        errorMessage: 'Name must be a string'
+      },
+      notEmpty: {
+        errorMessage: 'Name is required'
+      },
+      trim: true,
+      isLength: {
+        options: { min: 4, max: 100 },
+        errorMessage: 'Name must be between 4 and 100 characters'
+      }
     },
-    custom: {
-      options: (value, { req }) => {
-        if ( value !== req.body.password ) {
-          throw new Error('Password is not matched')
+    email: {
+      in: ['body'],
+      isEmail: {
+        errorMessage: 'Invalid email address'
+      },
+      notEmpty: {
+        errorMessage: 'Email is required'
+      },
+      trim: true
+    },
+    password: {
+      in: ['body'],
+      notEmpty: {
+        errorMessage: 'Password is required'
+      },
+      isLength: {
+        options: { min: 4, max: 50 },
+        errorMessage: 'Password must be between 4 and 50 characters'
+      }
+    },
+    confirm_password: {
+      in: ['body'],
+      notEmpty: {
+        errorMessage: 'Confirm password is required'
+      },
+      isLength: {
+        options: { min: 4, max: 50 },
+        errorMessage: 'Confirm password must be between 4 and 50 characters'
+      },
+      custom: {
+        options: (value, { req }) => {
+          if (value !== req.body.password) {
+            throw new Error('Passwords do not match')
+          }
+          return true
         }
-        return true
       }
     }
-  }
-
-}))
+  })
+)

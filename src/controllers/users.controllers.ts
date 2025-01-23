@@ -12,7 +12,8 @@ export const loginController = (req: Request, res: Response) => {
   } else res.status(400).json({ error: 'Login failed' })
 }
 
-export const registerController = async (req: Request, res: Response) => {
+export const 
+registerController = async (req: Request, res: Response) => {
   const { email, password } = req.body
   try{
     const result = await userService.register({ email, password })
