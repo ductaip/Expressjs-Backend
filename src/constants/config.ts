@@ -4,6 +4,7 @@ config()
 
 const envConfig = {
   port: process.env.PORT || 4000,
+  passwordSecret: process.env.PASSWORD_SECRET,
   dbName: process.env.DB_NAME,
   dbUsername: process.env.DB_USERNAME,
   dbPassword: process.env.DB_PASSWORD,
