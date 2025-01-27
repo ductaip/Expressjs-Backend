@@ -8,7 +8,8 @@ const envConfig = {
   dbName: process.env.DB_NAME,
   dbUsername: process.env.DB_USERNAME,
   dbPassword: process.env.DB_PASSWORD,
-  dbUsersCollection: process.env.DB_USERS_COLLECTION
+  dbUsersCollection: process.env.DB_USERS_COLLECTION,
+  jwtSecret: process.env.JWT_SECRET
 }
 
 export default envConfig

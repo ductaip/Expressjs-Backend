@@ -15,8 +15,8 @@ class DatabaseService {
   }
   async connect() {
     try {
-      await this.db.command({ ping: 1 });
-      console.log("Pinged your deployment. You successfully connected to MongoDB!");
+      await this.db.command({ ping: 1 })
+      console.log('Pinged your deployment. You successfully connected to MongoDB!')
     } catch (error) {
       console.log('Error', error)
       throw error
