@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 import userService from '~/services/users.services'
-import { ParamsDictionary } from 'express-serve-static-core'
+import { NextFunction, ParamsDictionary } from 'express-serve-static-core'
 import { RegisterReqBody } from '~/models/requests/User.requests'
 
 export const loginController = (req: Request, res: Response) => {
@@ -12,7 +12,11 @@ export const loginController = (req: Request, res: Response) => {
   } else res.status(400).json({ error: 'Login failed' })
 }
 
-export const registerController = async (req: Request<ParamsDictionary, any, RegisterReqBody>, res: Response) => {
+export const registerController = async (
+  req: Request<ParamsDictionary, any, RegisterReqBody>,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const result = await userService.register(req.body)
 
@@ -23,8 +27,6 @@ export const registerController = async (req: Request<ParamsDictionary, any, Reg
       result
     })
   } catch (error) {
-    res.status(400).json({ 
-      error: 'Register failed...'
-    })
+    next(error)
   }
 }
