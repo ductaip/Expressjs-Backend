@@ -1,6 +1,8 @@
 import express from 'express';
 import { validationResult, ValidationChain } from 'express-validator'
 import { RunnableValidationChains } from 'express-validator/lib/middlewares/schema'
+import httpStatus from '~/constants/httpStatus';
+import { ErrorWithStatus } from '~/models/Errors';
 
 /**
  * Middleware for validating request data.
@@ -16,9 +18,17 @@ export const validate = (validation: RunnableValidationChains<ValidationChain>) 
       await validation.run(req)
 
       const errors = validationResult(req)
+      const errorsObject = errors.mapped()
+      for (const key in errorsObject) {
+        const {msg} = errorsObject[key]
 
-      if (errors.isEmpty()) return next();
-      else res.status(400).json({ errors: errors.mapped() })
+        if (msg instanceof ErrorWithStatus && msg.status !== httpStatus.UNPROCESSABLE_ENTITY)
+          return next(msg)
+      }
+
+      if (errors.isEmpty()) return next()
+      else res.status(422).json({ errors: errors.mapped() })
+
     } catch (error) {
       // Handle unexpected errors gracefully
       console.error('Validation middleware error:', error)

@@ -5,7 +5,7 @@ import { hashPassword } from '~/utils/crypto'
 import { signToken } from '~/utils/jwt'
 import { TokenType } from '~/constants/enums'
 import envConfig from '~/constants/config'
-import type { StringValue } from "ms";
+import type { StringValue } from 'ms'
 
 class UsersService {
   private signAccessToken(user_id: string) {
@@ -31,7 +31,7 @@ class UsersService {
         payload: {
           user_id,
           token_type: TokenType.RefreshToken
-        }, 
+        },
         options: {
           expiresIn: envConfig.expiredRefresh as StringValue
         }

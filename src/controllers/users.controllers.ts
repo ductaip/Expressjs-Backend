@@ -17,13 +17,13 @@ export const registerController = async (
   res: Response,
   next: NextFunction
 ) => {
-  throw new Error('test new')
-  // const result = await userService.register(req.body)
+  // throw new Error('test new')
+  const result = await userService.register(req.body)
 
-  // console.log('result>>', result)
+  console.log('result>>', result)
 
-  // res.json({
-  //   message: 'Register success...',
-  //   result
-  // })
+  res.json({
+    message: 'Register success...',
+    result
+  })
 }
