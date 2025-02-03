@@ -42,7 +42,7 @@ export const registerValidator = validate(
       custom: {
         options: async (value) => {
           const isExistEmail = await userService.checkEmailExist(value)
-          if (isExistEmail) throw new ErrorWithStatus({ message: 'Email already exists', status: 401 })
+          if (isExistEmail) throw new Error('Email already exists')
 
           return true
         }

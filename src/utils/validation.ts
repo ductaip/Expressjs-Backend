@@ -1,8 +1,8 @@
 import express from 'express';
 import { validationResult, ValidationChain } from 'express-validator'
 import { RunnableValidationChains } from 'express-validator/lib/middlewares/schema'
-import httpStatus from '~/constants/httpStatus';
-import { ErrorWithStatus } from '~/models/Errors';
+import HTTP_STATUS from '~/constants/statusCodes';
+import { EntityError, ErrorWithStatus } from '~/models/Errors';
 
 /**
  * Middleware for validating request data.
@@ -18,16 +18,19 @@ export const validate = (validation: RunnableValidationChains<ValidationChain>) 
       await validation.run(req)
 
       const errors = validationResult(req)
-      const errorsObject = errors.mapped()
-      for (const key in errorsObject) {
-        const {msg} = errorsObject[key]
 
-        if (msg instanceof ErrorWithStatus && msg.status !== httpStatus.UNPROCESSABLE_ENTITY)
-          return next(msg)
+      if (errors.isEmpty()) return next() //if errors then next()
+      const errorsObject = errors.mapped() //else handle error
+
+      const entityErrors = new EntityError({ errors: {} })
+      for (const key in errorsObject) {
+        const { msg } = errorsObject[key]
+
+        if (msg instanceof ErrorWithStatus && msg.status !== HTTP_STATUS.UNPROCESSABLE_ENTITY) return next(msg)
+        else entityErrors.errors[key] = errorsObject[key]
       }
 
-      if (errors.isEmpty()) return next()
-      else res.status(422).json({ errors: errors.mapped() })
+      next(entityErrors)
 
     } catch (error) {
       // Handle unexpected errors gracefully

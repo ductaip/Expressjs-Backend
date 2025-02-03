@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
-import httpStatus from '~/constants/httpStatus'
+import { omit } from 'lodash'
+import HTTP_STATUS from '~/constants/statusCodes'
 
-export const defaultErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
-  res.status(err.status || httpStatus.INTERNAL_SERVER_ERROR).json(err)
+export const defaultErrorHandler = (err: any, req: Request, res: Response, 
+next: NextFunction) => {
+  console.log('yess')
+  res.status(err.status || HTTP_STATUS.INTERNAL_SERVER_ERROR).json(omit(err, 'status'))
 }
