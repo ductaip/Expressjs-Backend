@@ -2,12 +2,20 @@ import { Request, Response } from 'express'
 import userService from '~/services/users.services'
 import { NextFunction, ParamsDictionary } from 'express-serve-static-core'
 import { RegisterReqBody } from '~/models/requests/User.requests'
+import USER_MESSAGES from '~/constants/messages'
 
-export const loginController = (req: Request, res: Response) => {
-  const { user }: any = req
+export const loginController = async (
+  req: Request<ParamsDictionary, any, RegisterReqBody>,
+  res: Response,
+  next: NextFunction
+) => {
+  const user = req.user
   const { _id } = user
-  console.log('_id', _id.toString())
-  userService.login(_id.toString())
+  const result = await userService.login(_id.toString())
+  res.json({
+    message: USER_MESSAGES.LOGIN_SUCCESS,
+    result
+  })
 }
 
 export const registerController = async (
@@ -18,10 +26,10 @@ export const registerController = async (
   // throw new Error('test new')
   const result = await userService.register(req.body)
 
-  console.log('result>>', result)
+  // console.log('result>>', result)
 
   res.json({
-    message: 'Register success...',
+    message: USER_MESSAGES.REGISTER_SUCCESS,
     result
   })
 }
