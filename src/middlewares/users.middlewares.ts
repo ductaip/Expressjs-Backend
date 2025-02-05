@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 import { checkSchema } from 'express-validator'
 import USER_MESSAGES from '~/constants/messages'
-import { ErrorWithStatus } from '~/models/Errors'
+import databaseService from '~/services/database.services'
 import userService from '~/services/users.services'
 import { validate } from '~/utils/validation'
 
@@ -14,10 +14,11 @@ export const loginValidator = validate(
       },
       trim: true,
       custom: {
-        options: async (value) => {
-          const isExistEmail = await userService.checkEmailExist(value)
-          if (isExistEmail) throw new Error('Email already exists')
+        options: async (value, { req }) => {
+          const user = await databaseService.users.findOne({ email: value })
+          if (!user) throw new Error(USER_MESSAGES.USER_NOT_FOUND)
 
+          req.user = user
           return true
         }
       }
