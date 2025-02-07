@@ -6,6 +6,8 @@ import { signToken } from '~/utils/jwt'
 import { TokenType } from '~/constants/enums'
 import envConfig from '~/constants/config'
 import type { StringValue } from 'ms'
+import RefreshToken from '~/models/schemas/RefreshToken.schema'
+import { ObjectId } from 'mongodb'
 
 class UsersService {
   private signAccessToken(user_id: string) {
@@ -65,6 +67,10 @@ class UsersService {
 
     const user_id = result.insertedId.toString()
     const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user_id)
+    await databaseService.refreshTokens.insertOne( new RefreshToken({
+      user_id: new ObjectId(user_id),
+      token: refresh_token
+    }))
 
     return {
       access_token,
@@ -74,6 +80,11 @@ class UsersService {
 
   async login(user_id: string) {
     const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user_id)
+    await databaseService.refreshTokens.insertOne( new RefreshToken({
+      user_id: new ObjectId(user_id),
+      token: refresh_token
+    }))
+    
     return {
       access_token,
       refresh_token

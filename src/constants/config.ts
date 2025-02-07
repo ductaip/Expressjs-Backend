@@ -9,9 +9,11 @@ const envConfig = {
   dbUsername: process.env.DB_USERNAME,
   dbPassword: process.env.DB_PASSWORD,
   dbUsersCollection: process.env.DB_USERS_COLLECTION,
+  dbRefreshTokensCollection: process.env.DB_REFRESH_TOKENS_COLLECTION,
   jwtSecret: process.env.JWT_SECRET,
   expiredAccess: process.env.ACCESS_TOKEN_EXPIRES_IN,
-  expiredRefresh: process.env.REFRESH_TOKEN_EXPIRES_IN
+  expiredRefresh: process.env.REFRESH_TOKEN_EXPIRES_IN,
+
 }
 
 export default envConfig
