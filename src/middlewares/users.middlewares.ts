@@ -2,6 +2,8 @@
 import { Request, Response, NextFunction } from 'express'
 import { checkSchema } from 'express-validator'
 import USER_MESSAGES from '~/constants/messages'
+import HTTP_STATUS from '~/constants/statusCodes'
+import { ErrorWithStatus } from '~/models/Errors'
 import databaseService from '~/services/database.services'
 import userService from '~/services/users.services'
 import { hashPassword } from '~/utils/crypto'
@@ -107,9 +109,12 @@ export const accessTokenValidator = validate(
       },
       custom: {
         options: async (value: string, { req }) => {
-          const access_token = value.replace('Bearer ', '')
+          const access_token = value.split(' ')[1]
 
-          if(access_token === '') throw new Error(USER_MESSAGES.ACCESS_TOKEN_IS_REQUIRED)
+          if(!access_token) throw new ErrorWithStatus({
+            message: USER_MESSAGES.ACCESS_TOKEN_IS_REQUIRED,
+            status: HTTP_STATUS.UNAUTHORIZED
+          })
           
           const decoded_authorization = await verifyToken({token: access_token}) 
           req.decoded_authorization = decoded_authorization
@@ -119,4 +124,20 @@ export const accessTokenValidator = validate(
       }
     }
   }, ['headers'])
+)
+
+export const refreshTokenValidator = validate(
+  checkSchema({
+    refresh_token: {
+      notEmpty: {
+        errorMessage: USER_MESSAGES.REFRESH_TOKEN_IS_REQUIRED
+      },
+      custom: {
+        options: async (value: string, { req }) => {
+          const decoded_refresh_token = await verifyToken({token: value })
+          return true
+        }
+      }
+    }
+  })
 )
