@@ -12,6 +12,7 @@ const USER_MESSAGES = Object.freeze({
   CONFIRM_PASSWORD_IS_NOT_VALID: 'Confirm password must be between 4 and 50 characters',
   CONFIRM_PASSWORD_IS_NOT_MATCH: 'Confirm password do not match with password',
   LOGIN_SUCCESS: 'Login success',
+  LOGOUT_SUCCESS: 'Logout success',
   REGISTER_SUCCESS: 'Register success',
   ACCESS_TOKEN_IS_REQUIRED: 'Access token is required',
   REFRESH_TOKEN_IS_REQUIRED: 'Refresh token is required',

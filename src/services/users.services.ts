@@ -8,6 +8,7 @@ import envConfig from '~/constants/config'
 import type { StringValue } from 'ms'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId } from 'mongodb'
+import USER_MESSAGES from '~/constants/messages'
 
 class UsersService {
   private signAccessToken(user_id: string) {
@@ -90,6 +91,9 @@ class UsersService {
 
   async logout(refresh_token: string) {
     await databaseService.refreshTokens.deleteOne({ token: refresh_token })
+    return {
+      message: USER_MESSAGES.LOGOUT_SUCCESS
+    }
   }
 }
 
