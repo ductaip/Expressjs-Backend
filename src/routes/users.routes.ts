@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import { loginController, registerController } from '~/controllers/users.controllers'
-import { accessTokenValidator, loginValidator, registerValidator } from '~/middlewares/users.middlewares'
+import { accessTokenValidator, loginValidator, refreshTokenValidator, registerValidator } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handlers'
 import rateLimit from 'express-rate-limit'
 
@@ -9,11 +9,11 @@ const usersRouter = Router()
 /**
  * Middleware giới hạn số lần gọi API để chống brute-force attack
  */
-// const loginRateLimiter = rateLimit({
-//   windowMs: 15 * 60 * 1000, // 15 phút
-//   max: 15, // Tối đa 15 request trong 15 phút
-//   message: { error: 'Too many login attempts, please try again later.' }
-// })
+const loginRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 phút
+  max: 15, // Tối đa 15 request trong 15 phút
+  message: { error: 'Too many login attempts, please try again later.' }
+})
 
 /**
  * @module routes/users
@@ -30,7 +30,7 @@ const usersRouter = Router()
  * @returns {Error}  401 - Sai email hoặc mật khẩu
  * @returns {Error}  429 - Quá nhiều lần thử đăng nhập, hãy thử lại sau
  */
-usersRouter.post('/login', loginValidator, wrapRequestHandler(loginController))
+usersRouter.post('/login', loginRateLimiter, loginValidator, wrapRequestHandler(loginController))
 
 /**
  * Đăng ký tài khoản mới
@@ -45,7 +45,7 @@ usersRouter.post('/login', loginValidator, wrapRequestHandler(loginController))
  */
 usersRouter.post('/register', registerValidator, wrapRequestHandler(registerController))
 
-usersRouter.post('/logout', accessTokenValidator, wrapRequestHandler((req, res) => {
+usersRouter.post('/logout', accessTokenValidator, refreshTokenValidator, wrapRequestHandler((req, res) => {
   console.log(req)
   res.json({message: "good job logout bro"})
 }))
