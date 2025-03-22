@@ -192,32 +192,21 @@ export const emailVerifyTokenValidator = validate(
   checkSchema(
     {
       email_verify_token: {
-        notEmpty: {
-          errorMessage: USER_MESSAGES.EMAIL_VERIFY_TOKEN_IS_REQUIRED
-        },
+        trim: true,
         custom: {
           options: async (value: string, { req }) => {
-            try {
-              const [decoded_refresh_token, refresh_token] = await Promise.all([
-                verifyToken({ token: value, secretOrPublicKey: envConfig.jwtRefreshTokenSecret }),
-                databaseService.refreshTokens.findOne({ token: value })
-              ])
-              if (!refresh_token) {
-                throw new ErrorWithStatus({
-                  message: USER_MESSAGES.USED_REFRESH_TOKEN_OR_NOT_EXIST,
-                  status: HTTP_STATUS.UNAUTHORIZED
-                })
-              }
-              ;(req as Request).decoded_refresh_token = decoded_refresh_token
-            } catch (error) {
-              if (error instanceof JsonWebTokenError) {
-                throw new ErrorWithStatus({
-                  message: capitalize(error.message),
-                  status: HTTP_STATUS.UNAUTHORIZED
-                })
-              }
-              throw error
+            if (!value) {
+              throw new ErrorWithStatus({
+                message: USER_MESSAGES.EMAIL_VERIFY_TOKEN_IS_REQUIRED,
+                status: HTTP_STATUS.UNAUTHORIZED
+              })
             }
+            const decoded_email_verify_token = await verifyToken({
+              token: value,
+              secretOrPublicKey: envConfig.jwtEmailVerifyTokenSecret
+            })
+
+            ;(req as Request).decoded_email_verify_token = decoded_email_verify_token
           }
         }
       }

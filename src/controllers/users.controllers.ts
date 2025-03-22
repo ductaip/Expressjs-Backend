@@ -1,9 +1,11 @@
 import { Request, Response } from 'express'
 import userService from '~/services/users.services'
 import { NextFunction, ParamsDictionary } from 'express-serve-static-core'
-import { LogoutReqBody, RegisterReqBody } from '~/models/requests/User.requests'
+import { LogoutReqBody, RegisterReqBody, TokenPayload } from '~/models/requests/User.requests'
 import USER_MESSAGES from '~/constants/messages'
 import databaseService from '~/services/database.services'
+import { ObjectId } from 'mongodb'
+import HTTP_STATUS from '~/constants/statusCodes'
 
 export const loginController = async (
   req: Request<ParamsDictionary, any, RegisterReqBody>,
@@ -43,4 +45,23 @@ export const logoutController = async (
   const { refresh_token } = req.body
   const result = await userService.logout(refresh_token)
   res.json(result)
+}
+
+export const emailVerifyValidatorController = async (req: Request, res: Response, next: NextFunction) => {
+  const { user_id } = req.decoded_email_verify_token as TokenPayload
+  const user = await databaseService.users.findOne({
+    _id: new ObjectId(user_id)
+  })
+
+  if (!user) {
+    res.status(HTTP_STATUS.NOT_FOUND).json({
+      message: USER_MESSAGES.USER_NOT_FOUND
+    })
+  }
+
+  if (user.email_verify_token === '') {
+    res.json({
+      message: USER_MESSAGES.USER_ALREADY_VERIFIED
+    })
+  }
 }
