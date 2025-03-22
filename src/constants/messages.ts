@@ -20,6 +20,7 @@ const USER_MESSAGES = Object.freeze({
   REFRESH_TOKEN_IS_INVALID: 'Refresh token is invalid',
   USED_REFRESH_TOKEN_OR_NOT_EXIST: 'Refresh token is used or isn`t exist',
   EMAIL_VERIFY_TOKEN_IS_REQUIRED: 'Email verify token is required',
+  EMAIL_VERIFY_SUCCESS: 'Email have verified successfully',
   USER_ALREADY_VERIFIED: 'Email have verified'
 })
 

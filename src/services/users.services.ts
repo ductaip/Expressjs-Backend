@@ -65,6 +65,24 @@ class UsersService {
     }
   }
 
+  private signForgotPasswordToken(user_id: string) {
+    try {
+      return signToken({
+        payload: {
+          user_id,
+          token_type: TokenType.ForgotPasswordToken
+        },
+        privateKey: envConfig.jwtEmailForgotPasswordSecret,
+        options: {
+          expiresIn: envConfig.expiredForgotPassword as StringValue
+        }
+      })
+    } catch (error) {
+      console.error('Error signing forgot password token:', error)
+      throw new Error('Could not sign forgot password token')
+    }
+  }
+
   async checkEmailExist(email: string) {
     const user = await databaseService.users.findOne({ email })
 
@@ -132,6 +150,9 @@ class UsersService {
           $set: {
             email_verify_token: '',
             update_at: new Date()
+          },
+          $currentDate: {
+            updated_at: true
           }
         }
       )
@@ -140,6 +161,23 @@ class UsersService {
     return {
       access_token,
       refresh_token
+    }
+  }
+
+  async forgotPassword(user_id: string) {
+    const forgot_password_token = await this.signForgotPasswordToken(user_id)
+
+    await databaseService.users.updateOne({ _id: new ObjectId(user_id) }, [
+      {
+        $set: {
+          forgot_password_token,
+          updated_at: '$$NOW'
+        }
+      }
+    ])
+
+    return {
+      message: 'Check email to reset password'
     }
   }
 }
