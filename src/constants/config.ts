@@ -14,7 +14,8 @@ const envConfig = {
   jwtRefreshTokenSecret: process.env.JWT_SECRET_REFRESH_TOKEN,
   jwtEmailVerifyTokenSecret: process.env.JWT_SECRET_EMAIL_VERIFY_TOKEN,
   expiredAccess: process.env.ACCESS_TOKEN_EXPIRES_IN,
-  expiredRefresh: process.env.REFRESH_TOKEN_EXPIRES_IN
+  expiredRefresh: process.env.REFRESH_TOKEN_EXPIRES_IN,
+  expiredEmailVerify: process.env.EMAIL_VERIFY_TOKEN_EXPIRES_IN
 }
 
 export default envConfig

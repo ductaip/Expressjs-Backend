@@ -64,4 +64,10 @@ export const emailVerifyValidatorController = async (req: Request, res: Response
       message: USER_MESSAGES.USER_ALREADY_VERIFIED
     })
   }
+
+  const result = await userService.verifyEmail(user_id)
+  return res.json({
+    message: USER_MESSAGES.EMAIL_VERIFY_SUCCESS,
+    result
+  })
 }
