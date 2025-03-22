@@ -18,6 +18,7 @@ class UsersService {
           user_id,
           token_type: TokenType.AccessToken
         },
+        privateKey: envConfig.jwtAccessTokenSecret,
         options: {
           expiresIn: envConfig.expiredAccess as StringValue
         }
@@ -35,6 +36,7 @@ class UsersService {
           user_id,
           token_type: TokenType.RefreshToken
         },
+        privateKey: envConfig.jwtRefreshTokenSecret,
         options: {
           expiresIn: envConfig.expiredRefresh as StringValue
         }
@@ -65,10 +67,12 @@ class UsersService {
 
     const user_id = result.insertedId.toString()
     const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user_id)
-    await databaseService.refreshTokens.insertOne(new RefreshToken({
-      user_id: new ObjectId(user_id),
-      token: refresh_token
-    }))
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({
+        user_id: new ObjectId(user_id),
+        token: refresh_token
+      })
+    )
 
     return {
       access_token,
@@ -78,11 +82,13 @@ class UsersService {
 
   async login(user_id: string) {
     const [access_token, refresh_token] = await this.signAccessAndRefreshToken(user_id)
-    await databaseService.refreshTokens.insertOne( new RefreshToken({
-      user_id: new ObjectId(user_id),
-      token: refresh_token
-    }))
-    
+    await databaseService.refreshTokens.insertOne(
+      new RefreshToken({
+        user_id: new ObjectId(user_id),
+        token: refresh_token
+      })
+    )
+
     return {
       access_token,
       refresh_token

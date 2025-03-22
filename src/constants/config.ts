@@ -1,4 +1,4 @@
-import { config } from "dotenv"
+import { config } from 'dotenv'
 
 config()
 
@@ -10,10 +10,11 @@ const envConfig = {
   dbPassword: process.env.DB_PASSWORD,
   dbUsersCollection: process.env.DB_USERS_COLLECTION,
   dbRefreshTokensCollection: process.env.DB_REFRESH_TOKENS_COLLECTION,
-  jwtSecret: process.env.JWT_SECRET,
+  jwtAccessTokenSecret: process.env.JWT_SECRET_ACCESS_TOKEN,
+  jwtRefreshTokenSecret: process.env.JWT_SECRET_REFRESH_TOKEN,
+  jwtEmailVerifyTokenSecret: process.env.JWT_SECRET_EMAIL_VERIFY_TOKEN,
   expiredAccess: process.env.ACCESS_TOKEN_EXPIRES_IN,
-  expiredRefresh: process.env.REFRESH_TOKEN_EXPIRES_IN,
-
+  expiredRefresh: process.env.REFRESH_TOKEN_EXPIRES_IN
 }
 
 export default envConfig

@@ -35,10 +35,9 @@ export const registerController = async (
   })
 }
 
-
-export const logoutController = async ( 
+export const logoutController = async (
   req: Request<ParamsDictionary, any, LogoutReqBody>,
-  res: Response, 
+  res: Response,
   next: NextFunction
 ) => {
   const { refresh_token } = req.body
