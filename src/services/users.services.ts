@@ -148,8 +148,7 @@ class UsersService {
         { _id: new ObjectId(user_id) },
         {
           $set: {
-            email_verify_token: '',
-            update_at: new Date()
+            email_verify_token: ''
           },
           $currentDate: {
             updated_at: true
@@ -178,6 +177,28 @@ class UsersService {
 
     return {
       message: 'Check email to reset password'
+    }
+  }
+
+  async verifyForgotPassword(user_id: string) {
+    const [token] = await Promise.all([
+      this.signAccessAndRefreshToken(user_id),
+      databaseService.users.updateOne(
+        { _id: new ObjectId(user_id) },
+        {
+          $set: {
+            forgot_password_token: ''
+          },
+          $currentDate: {
+            updated_at: true
+          }
+        }
+      )
+    ])
+    const [access_token, refresh_token] = token
+    return {
+      access_token,
+      refresh_token
     }
   }
 }

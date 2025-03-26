@@ -5,7 +5,8 @@ import {
   ForgotPasswordRequestBody,
   LogoutReqBody,
   RegisterReqBody,
-  TokenPayload
+  TokenPayload,
+  VerifyForgotPasswordRequestBody
 } from '~/models/requests/User.requests'
 import USER_MESSAGES from '~/constants/messages'
 import databaseService from '~/services/database.services'
@@ -89,11 +90,14 @@ export const forgotPasswordController = async (
 }
 
 export const verifyForgotPasswordController = async (
-  req: Request<ParamsDictionary, any, ForgotPasswordRequestBody>,
+  req: Request<ParamsDictionary, any, VerifyForgotPasswordRequestBody>,
   res: Response,
   next: NextFunction
 ) => {
-  const { _id } = req.user as User
-  const result = await userService.forgotPassword(_id.toString())
-  res.json(result)
+  const { user_id } = req.decoded_verify_password_token
+  const result = await userService.verifyForgotPassword(user_id)
+  res.json({
+    message: 'Verify password successfully, please create new password',
+    result
+  })
 }

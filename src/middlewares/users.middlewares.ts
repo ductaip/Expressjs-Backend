@@ -250,9 +250,27 @@ export const verifyForgotPasswordValidator = validate(
         trim: true,
         custom: {
           options: async (value, { req }) => {
-            const user = await databaseService.users.findOne({
-              forgot_password_token: value
-            })
+            try {
+              const [decoded_verify_password_token, user] = await Promise.all([
+                verifyToken({ token: value, secretOrPublicKey: envConfig.jwtEmailForgotPasswordSecret }),
+                databaseService.users.findOne({ forgot_password_token: value })
+              ])
+              if (!decoded_verify_password_token) {
+                throw new ErrorWithStatus({
+                  message: USER_MESSAGES.USED_REFRESH_TOKEN_OR_NOT_EXIST,
+                  status: HTTP_STATUS.UNAUTHORIZED
+                })
+              }
+              ;(req as Request).decoded_verify_password_token = decoded_verify_password_token
+            } catch (error) {
+              if (error instanceof JsonWebTokenError) {
+                throw new ErrorWithStatus({
+                  message: capitalize(error.message),
+                  status: HTTP_STATUS.UNAUTHORIZED
+                })
+              }
+              throw error
+            }
             if (!user) throw new Error(USER_MESSAGES.FORGOT_PASSWORD_TOKEN_IS_NOT_FOUND)
 
             req.user = user
