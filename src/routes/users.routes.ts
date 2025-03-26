@@ -12,7 +12,8 @@ import {
   forgotPasswordValidator,
   loginValidator,
   refreshTokenValidator,
-  registerValidator
+  registerValidator,
+  verifyForgotPasswordValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handlers'
 import rateLimit from 'express-rate-limit'
@@ -82,5 +83,14 @@ usersRouter.post('/verify-email', emailVerifyTokenValidator, wrapRequestHandler(
  *
  */
 usersRouter.post('/forgot-password', forgotPasswordValidator, wrapRequestHandler(forgotPasswordController))
+
+/**
+ * Description: verify forgot password when user enter the token_verify_pwd
+ * Path: /forgot-password
+ * Method: POST
+ * Body: {forgot_password_token: string}
+ *
+ */
+usersRouter.post('/verify-forgot-password', verifyForgotPasswordValidator, wrapRequestHandler(forgotPasswordController))
 
 export default usersRouter
