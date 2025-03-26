@@ -21,7 +21,9 @@ const USER_MESSAGES = Object.freeze({
   USED_REFRESH_TOKEN_OR_NOT_EXIST: 'Refresh token is used or isn`t exist',
   EMAIL_VERIFY_TOKEN_IS_REQUIRED: 'Email verify token is required',
   EMAIL_VERIFY_SUCCESS: 'Email have verified successfully',
-  USER_ALREADY_VERIFIED: 'Email have verified'
+  USER_ALREADY_VERIFIED: 'Email have verified',
+  FORGOT_PASSWORD_TOKEN_IS_REQUIRED: 'Forgot password token is required',
+  FORGOT_PASSWORD_TOKEN_IS_NOT_FOUND: 'Forgot password token isn`t found'
 })
 
 export default USER_MESSAGES
