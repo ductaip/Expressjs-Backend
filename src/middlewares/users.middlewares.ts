@@ -12,6 +12,7 @@ import { validate } from '~/utils/validation'
 import { capitalize } from 'lodash'
 import { Request } from 'express'
 import envConfig from '~/constants/config'
+import { ObjectId } from 'mongodb'
 export const loginValidator = validate(
   checkSchema(
     {
@@ -251,17 +252,30 @@ export const verifyForgotPasswordValidator = validate(
         custom: {
           options: async (value, { req }) => {
             try {
-              const [decoded_verify_password_token, user] = await Promise.all([
-                verifyToken({ token: value, secretOrPublicKey: envConfig.jwtEmailForgotPasswordSecret }),
-                databaseService.users.findOne({ forgot_password_token: value })
-              ])
+              const decoded_verify_password_token = await verifyToken({
+                token: value,
+                secretOrPublicKey: envConfig.jwtEmailForgotPasswordSecret
+              })
               if (!decoded_verify_password_token) {
                 throw new ErrorWithStatus({
                   message: USER_MESSAGES.USED_REFRESH_TOKEN_OR_NOT_EXIST,
                   status: HTTP_STATUS.UNAUTHORIZED
                 })
               }
-              ;(req as Request).decoded_verify_password_token = decoded_verify_password_token
+              const { user_id } = decoded_verify_password_token
+              const user = await databaseService.users.findOne({ _id: new ObjectId(user_id) })
+              if (!user) {
+                throw new ErrorWithStatus({
+                  message: USER_MESSAGES.USER_NOT_FOUND,
+                  status: HTTP_STATUS.UNAUTHORIZED
+                })
+              }
+              if (user.forgot_password_token !== value) {
+                throw new ErrorWithStatus({
+                  message: USER_MESSAGES.FORGOT_PASSWORD_TOKEN_IS_NOT_FOUND,
+                  status: HTTP_STATUS.UNAUTHORIZED
+                })
+              }
             } catch (error) {
               if (error instanceof JsonWebTokenError) {
                 throw new ErrorWithStatus({
@@ -271,9 +285,7 @@ export const verifyForgotPasswordValidator = validate(
               }
               throw error
             }
-            if (!user) throw new Error(USER_MESSAGES.FORGOT_PASSWORD_TOKEN_IS_NOT_FOUND)
 
-            req.user = user
             return true
           }
         }
