@@ -21,7 +21,7 @@ export const loginController = async (
 ) => {
   const user = req.user
   const { _id } = user
-  const result = await userService.login(_id.toString())
+  const result = await userService.login({ user_id: _id.toString(), verify: user.verify })
   res.json({
     message: USER_MESSAGES.LOGIN_SUCCESS,
     result
@@ -85,7 +85,7 @@ export const forgotPasswordController = async (
   next: NextFunction
 ) => {
   const { _id } = req.user as User
-  const result = await userService.forgotPassword(_id.toString())
+  const result = await userService.forgotPassword({ user_id: _id.toString(), verify: req.user.verify })
   res.json(result)
 }
 

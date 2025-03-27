@@ -104,7 +104,17 @@ usersRouter.post(
  * Path: /forgot-password
  * Method: POST
  * Body: {forgot_password_token: string}
- *
+ * Header: {Authorization: Bearer <access_token>}
  */
 usersRouter.get('/profile', accessTokenValidator, wrapRequestHandler(getProfile))
+
+/**
+ * Description: update profile
+ * Path: /forgot-password
+ * Method: POST
+ * Body: {body: UserSchema}
+ * Header: {Authorization: Bearer <access_token>}
+ */
+usersRouter.patch('/profile', accessTokenValidator, wrapRequestHandler(getProfile))
+
 export default usersRouter
