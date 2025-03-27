@@ -98,3 +98,17 @@ export const verifyForgotPasswordController = async (
     message: USER_MESSAGES.VERIFY_FORGOT_PASSWORD_SUCCESS
   })
 }
+
+export const getProfile = async (
+  req: Request<ParamsDictionary, any, VerifyForgotPasswordRequestBody>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { user_id } = req.decoded_authorization
+  const result = await userService.getProfile(user_id)
+
+  res.json({
+    message: USER_MESSAGES.GET_PROFILE_SUCCESS,
+    result
+  })
+}

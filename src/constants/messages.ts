@@ -24,7 +24,8 @@ const USER_MESSAGES = Object.freeze({
   USER_ALREADY_VERIFIED: 'Email have verified',
   FORGOT_PASSWORD_TOKEN_IS_REQUIRED: 'Forgot password token is required',
   FORGOT_PASSWORD_TOKEN_IS_NOT_FOUND: 'Forgot password token isn`t found',
-  VERIFY_FORGOT_PASSWORD_SUCCESS: 'Verify forgot password successfully, please create new password'
+  VERIFY_FORGOT_PASSWORD_SUCCESS: 'Verify forgot password successfully, please create new password',
+  GET_PROFILE_SUCCESS: 'Get personal profile successfully'
 })
 
 export default USER_MESSAGES
