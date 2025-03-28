@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { checkSchema } from 'express-validator'
+import { checkSchema, ParamSchema } from 'express-validator'
 import { JsonWebTokenError } from 'jsonwebtoken'
 import USER_MESSAGES from '~/constants/messages'
 import HTTP_STATUS from '~/constants/statusCodes'
@@ -9,12 +9,48 @@ import userService from '~/services/users.services'
 import { hashPassword } from '~/utils/crypto'
 import { verifyToken } from '~/utils/jwt'
 import { validate } from '~/utils/validation'
-import { capitalize } from 'lodash'
+import { capitalize, isLength } from 'lodash'
 import { NextFunction, Request, RequestHandler, Response } from 'express'
 import envConfig from '~/constants/config'
 import { ObjectId } from 'mongodb'
 import { TokenPayload } from '~/models/requests/User.requests'
 import { UserVerifyStatus } from '~/constants/enums'
+
+const dateOfBirthSchema: ParamSchema = {
+  isISO8601: {
+    options: {
+      strict: true,
+      strictSeparator: true
+    }
+  },
+  errorMessage: USER_MESSAGES.DATE_OF_BIRTH_MUST_BE_ISO8601
+}
+
+const nameSchema: ParamSchema = {
+  isString: {
+    errorMessage: USER_MESSAGES.NAME_IS_STRING
+  },
+  notEmpty: {
+    errorMessage: USER_MESSAGES.NAME_IS_REQUIRED
+  },
+  trim: true,
+  isLength: {
+    options: { min: 4, max: 100 },
+    errorMessage: USER_MESSAGES.NAME_IS_NOT_VALID
+  }
+}
+
+const imageSchema: ParamSchema = {
+  trim: true,
+  optional: true,
+  isString: {
+    errorMessage: USER_MESSAGES.IMAGE_MUST_BE_STRING
+  },
+  isLength: {
+    options: { min: 4, max: 50 },
+    errorMessage: USER_MESSAGES.IMAGE_LENGTH_IS_INVALID
+  }
+}
 
 export const loginValidator = validate(
   checkSchema(
@@ -55,19 +91,7 @@ export const loginValidator = validate(
 export const registerValidator = validate(
   checkSchema(
     {
-      username: {
-        isString: {
-          errorMessage: USER_MESSAGES.USERNAME_IS_STRING
-        },
-        notEmpty: {
-          errorMessage: USER_MESSAGES.USERNAME_IS_REQUIRED
-        },
-        trim: true,
-        isLength: {
-          options: { min: 4, max: 100 },
-          errorMessage: USER_MESSAGES.USERNAME_IS_NOT_VALID
-        }
-      },
+      name: nameSchema,
       email: {
         isEmail: {
           errorMessage: USER_MESSAGES.EMAIL_IS_REQUIRED
@@ -293,6 +317,72 @@ export const verifyForgotPasswordValidator = validate(
           }
         }
       }
+    },
+    ['body']
+  )
+)
+
+export const updateProfileValidator = validate(
+  checkSchema(
+    {
+      name: {
+        ...nameSchema,
+        optional: true,
+        notEmpty: undefined
+      },
+      date_of_birth: {
+        ...dateOfBirthSchema,
+        optional: true
+      },
+      bio: {
+        trim: true,
+        optional: true,
+        isString: {
+          errorMessage: USER_MESSAGES.BIO_MUST_BE_STRING
+        },
+        isLength: {
+          options: { min: 4, max: 100 },
+          errorMessage: USER_MESSAGES.BIO_LENGTH_IS_INVALID
+        }
+      },
+      location: {
+        trim: true,
+        optional: true,
+        isString: {
+          errorMessage: USER_MESSAGES.LOCATION_MUST_BE_STRING
+        },
+        isLength: {
+          options: { min: 4, max: 50 },
+          errorMessage: USER_MESSAGES.LOCATION_LENGTH_IS_INVALID
+        }
+      },
+
+      website: {
+        trim: true,
+        optional: true,
+        isString: {
+          errorMessage: USER_MESSAGES.WEBSITE_MUST_BE_STRING
+        },
+        isLength: {
+          options: { min: 4, max: 200 },
+          errorMessage: USER_MESSAGES.WEBSITE_LENGTH_IS_INVALID
+        }
+      },
+
+      username: {
+        trim: true,
+        optional: true,
+        isString: {
+          errorMessage: USER_MESSAGES.USERNAME_MUST_BE_STRING
+        },
+        isLength: {
+          options: { min: 4, max: 50 },
+          errorMessage: USER_MESSAGES.USERNAME_LENGTH_IS_INVALID
+        }
+      },
+
+      avatar: imageSchema,
+      cover_photo: imageSchema
     },
     ['body']
   )

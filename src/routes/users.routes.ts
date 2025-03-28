@@ -6,6 +6,7 @@ import {
   loginController,
   logoutController,
   registerController,
+  updateProfileController,
   verifyForgotPasswordController
 } from '~/controllers/users.controllers'
 import {
@@ -15,6 +16,7 @@ import {
   loginValidator,
   refreshTokenValidator,
   registerValidator,
+  updateProfileValidator,
   verifiedUserValidator,
   verifyForgotPasswordValidator
 } from '~/middlewares/users.middlewares'
@@ -116,6 +118,12 @@ usersRouter.get('/profile', accessTokenValidator, wrapRequestHandler(getProfile)
  * Body: {body: UserSchema}
  * Header: {Authorization: Bearer <access_token>}
  */
-usersRouter.patch('/profile', accessTokenValidator, verifiedUserValidator, wrapRequestHandler(getProfile))
+usersRouter.patch(
+  '/profile',
+  accessTokenValidator,
+  verifiedUserValidator,
+  updateProfileValidator,
+  wrapRequestHandler(updateProfileController)
+)
 
 export default usersRouter

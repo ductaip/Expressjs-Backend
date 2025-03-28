@@ -2,10 +2,10 @@ const USER_MESSAGES = Object.freeze({
   VALIDATION: 'Validation error',
   EMAIL_IS_REQUIRED: 'Invalid email address',
   EMAIL_IS_EXISTS: 'Email already exists',
-  USERNAME_IS_STRING: 'Username must be a string',
-  USERNAME_IS_REQUIRED: 'Username is required',
+  NAME_IS_STRING: 'Name must be a string',
+  NAME_IS_REQUIRED: 'Name is required',
   USER_NOT_FOUND: 'Email or password is incorrect',
-  USERNAME_IS_NOT_VALID: 'Username must be between 4 and 100 characters',
+  NAME_IS_NOT_VALID: 'Name must be between 4 and 100 characters',
   PASSWORD_IS_REQUIRED: 'Password is required',
   PASSWORD_IS_NOT_VALID: 'Password must be between 4 and 50 characters',
   CONFIRM_PASSWORD_IS_REQUIRED: 'Confirm password is required',
@@ -26,7 +26,18 @@ const USER_MESSAGES = Object.freeze({
   FORGOT_PASSWORD_TOKEN_IS_NOT_FOUND: 'Forgot password token isn`t found',
   VERIFY_FORGOT_PASSWORD_SUCCESS: 'Verify forgot password successfully, please create new password',
   GET_PROFILE_SUCCESS: 'Get personal profile successfully',
-  USER_NOT_VERIFIED: 'User is not verified'
+  USER_NOT_VERIFIED: 'User is not verified',
+  DATE_OF_BIRTH_MUST_BE_ISO8601: 'Date of birth must be ISO8601',
+  BIO_MUST_BE_STRING: 'Bio must be string',
+  BIO_LENGTH_IS_INVALID: 'Bio length must be between 4 to 100 characters',
+  LOCATION_MUST_BE_STRING: 'Location must be string',
+  LOCATION_LENGTH_IS_INVALID: 'Location length must be between 4 to 50 characters',
+  WEBSITE_MUST_BE_STRING: 'Website must be string',
+  WEBSITE_LENGTH_IS_INVALID: 'Website length must be between 4 to 200 characters',
+  USERNAME_MUST_BE_STRING: 'Username must be string',
+  USERNAME_LENGTH_IS_INVALID: 'Username length must be between 4 to 50 characters',
+  IMAGE_MUST_BE_STRING: 'Image must be string',
+  IMAGE_LENGTH_IS_INVALID: 'Image length must be between 4 to 50 characters'
 })
 
 export default USER_MESSAGES

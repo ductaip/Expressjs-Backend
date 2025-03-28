@@ -3,6 +3,7 @@ import userService from '~/services/users.services'
 import { NextFunction, ParamsDictionary } from 'express-serve-static-core'
 import {
   ForgotPasswordRequestBody,
+  LoginReqBody,
   LogoutReqBody,
   RegisterReqBody,
   TokenPayload,
@@ -15,7 +16,7 @@ import HTTP_STATUS from '~/constants/statusCodes'
 import User from '~/models/schemas/User.schema'
 
 export const loginController = async (
-  req: Request<ParamsDictionary, any, RegisterReqBody>,
+  req: Request<ParamsDictionary, any, LoginReqBody>,
   res: Response,
   next: NextFunction
 ) => {
@@ -110,5 +111,15 @@ export const getProfile = async (
   res.json({
     message: USER_MESSAGES.GET_PROFILE_SUCCESS,
     result
+  })
+}
+
+export const updateProfileController = (
+  req: Request<ParamsDictionary, any, VerifyForgotPasswordRequestBody>,
+  res: Response,
+  next: NextFunction
+) => {
+  res.json({
+    message: 'good good'
   })
 }
