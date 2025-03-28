@@ -37,7 +37,8 @@ const USER_MESSAGES = Object.freeze({
   USERNAME_MUST_BE_STRING: 'Username must be string',
   USERNAME_LENGTH_IS_INVALID: 'Username length must be between 4 to 50 characters',
   IMAGE_MUST_BE_STRING: 'Image must be string',
-  IMAGE_LENGTH_IS_INVALID: 'Image length must be between 4 to 50 characters'
+  IMAGE_LENGTH_IS_INVALID: 'Image length must be between 4 to 50 characters',
+  UPDATE_PROFILE_SUCCESS: 'Update profile successfully'
 })
 
 export default USER_MESSAGES
