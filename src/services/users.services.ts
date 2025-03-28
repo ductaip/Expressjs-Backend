@@ -19,7 +19,7 @@ class UsersService {
           token_type: TokenType.AccessToken,
           verify
         },
-        privateKey: envConfig.jwtAccessTokenSecret,
+        privateKey: envConfig.jwtAccessTokenSecret as string,
         options: {
           expiresIn: envConfig.expiredAccess as StringValue
         }
@@ -38,7 +38,7 @@ class UsersService {
           token_type: TokenType.RefreshToken,
           verify
         },
-        privateKey: envConfig.jwtRefreshTokenSecret,
+        privateKey: envConfig.jwtRefreshTokenSecret as string,
         options: {
           expiresIn: envConfig.expiredRefresh as StringValue
         }
@@ -57,7 +57,7 @@ class UsersService {
           token_type: TokenType.EmailVerifyToken,
           verify
         },
-        privateKey: envConfig.jwtEmailVerifyTokenSecret,
+        privateKey: envConfig.jwtEmailVerifyTokenSecret as string,
         options: {
           expiresIn: envConfig.expiredEmailVerify as StringValue
         }
@@ -76,7 +76,7 @@ class UsersService {
           token_type: TokenType.ForgotPasswordToken,
           verify
         },
-        privateKey: envConfig.jwtEmailForgotPasswordSecret,
+        privateKey: envConfig.jwtEmailForgotPasswordSecret as string,
         options: {
           expiresIn: envConfig.expiredForgotPassword as StringValue
         }

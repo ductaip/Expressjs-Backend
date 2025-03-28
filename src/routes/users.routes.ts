@@ -15,6 +15,7 @@ import {
   loginValidator,
   refreshTokenValidator,
   registerValidator,
+  verifiedUserValidator,
   verifyForgotPasswordValidator
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handlers'
@@ -115,6 +116,6 @@ usersRouter.get('/profile', accessTokenValidator, wrapRequestHandler(getProfile)
  * Body: {body: UserSchema}
  * Header: {Authorization: Bearer <access_token>}
  */
-usersRouter.patch('/profile', accessTokenValidator, wrapRequestHandler(getProfile))
+usersRouter.patch('/profile', accessTokenValidator, verifiedUserValidator, wrapRequestHandler(getProfile))
 
 export default usersRouter

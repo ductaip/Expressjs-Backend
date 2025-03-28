@@ -20,8 +20,8 @@ export const loginController = async (
   next: NextFunction
 ) => {
   const user = req.user
-  const { _id } = user
-  const result = await userService.login({ user_id: _id.toString(), verify: user.verify })
+  const { _id } = user as User
+  const result = await userService.login({ user_id: _id?.toString() || '', verify: user?.verify || 0 })
   res.json({
     message: USER_MESSAGES.LOGIN_SUCCESS,
     result
@@ -66,7 +66,7 @@ export const emailVerifyValidatorController = async (req: Request, res: Response
     })
   }
 
-  if (user.email_verify_token === '') {
+  if (user?.email_verify_token === '') {
     res.json({
       message: USER_MESSAGES.USER_ALREADY_VERIFIED
     })
@@ -85,7 +85,7 @@ export const forgotPasswordController = async (
   next: NextFunction
 ) => {
   const { _id } = req.user as User
-  const result = await userService.forgotPassword({ user_id: _id.toString(), verify: req.user.verify })
+  const result = await userService.forgotPassword({ user_id: _id?.toString() || '', verify: req?.user?.verify || 0 })
   res.json(result)
 }
 
@@ -104,7 +104,7 @@ export const getProfile = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { user_id } = req.decoded_authorization
+  const { user_id } = req.decoded_authorization as TokenPayload
   const result = await userService.getProfile(user_id)
 
   res.json({

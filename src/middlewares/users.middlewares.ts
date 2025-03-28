@@ -10,9 +10,12 @@ import { hashPassword } from '~/utils/crypto'
 import { verifyToken } from '~/utils/jwt'
 import { validate } from '~/utils/validation'
 import { capitalize } from 'lodash'
-import { Request } from 'express'
+import { NextFunction, Request, RequestHandler, Response } from 'express'
 import envConfig from '~/constants/config'
 import { ObjectId } from 'mongodb'
+import { TokenPayload } from '~/models/requests/User.requests'
+import { UserVerifyStatus } from '~/constants/enums'
+
 export const loginValidator = validate(
   checkSchema(
     {
@@ -128,7 +131,7 @@ export const accessTokenValidator = validate(
             try {
               const decoded_authorization = await verifyToken({
                 token: access_token,
-                secretOrPublicKey: envConfig.jwtAccessTokenSecret
+                secretOrPublicKey: envConfig.jwtAccessTokenSecret as string
               })
               ;(req as Request).decoded_authorization = decoded_authorization
             } catch (error) {
@@ -162,7 +165,7 @@ export const refreshTokenValidator = validate(
             }
             try {
               const [decoded_refresh_token, refresh_token] = await Promise.all([
-                verifyToken({ token: value, secretOrPublicKey: envConfig.jwtRefreshTokenSecret }),
+                verifyToken({ token: value, secretOrPublicKey: envConfig.jwtRefreshTokenSecret! }),
                 databaseService.refreshTokens.findOne({ token: value })
               ])
               if (!refresh_token) {
@@ -204,7 +207,7 @@ export const emailVerifyTokenValidator = validate(
             }
             const decoded_email_verify_token = await verifyToken({
               token: value,
-              secretOrPublicKey: envConfig.jwtEmailVerifyTokenSecret
+              secretOrPublicKey: envConfig.jwtEmailVerifyTokenSecret!
             })
 
             ;(req as Request).decoded_email_verify_token = decoded_email_verify_token
@@ -254,7 +257,7 @@ export const verifyForgotPasswordValidator = validate(
             try {
               const decoded_verify_password_token = await verifyToken({
                 token: value,
-                secretOrPublicKey: envConfig.jwtEmailForgotPasswordSecret
+                secretOrPublicKey: envConfig.jwtEmailForgotPasswordSecret as string
               })
               if (!decoded_verify_password_token) {
                 throw new ErrorWithStatus({
@@ -294,3 +297,16 @@ export const verifyForgotPasswordValidator = validate(
     ['body']
   )
 )
+
+export const verifiedUserValidator = async (req: Request, res: Response, next: NextFunction) => {
+  const { verify } = req.decoded_authorization as TokenPayload
+  if (verify !== UserVerifyStatus.Verified) {
+    return next(
+      new ErrorWithStatus({
+        message: USER_MESSAGES.USER_NOT_VERIFIED,
+        status: HTTP_STATUS.FORBIDDEN
+      })
+    )
+  }
+  next()
+}
