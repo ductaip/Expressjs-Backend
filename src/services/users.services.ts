@@ -9,6 +9,9 @@ import type { StringValue } from 'ms'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
 import { ObjectId, ReturnDocument } from 'mongodb'
 import USER_MESSAGES from '~/constants/messages'
+import { ErrorWithStatus } from '~/models/Errors'
+import HTTP_STATUS from '~/constants/statusCodes'
+import { pick } from 'lodash'
 
 class UsersService {
   private signAccessToken({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
@@ -256,6 +259,24 @@ class UsersService {
     )
 
     return user
+  }
+
+  async getUser(username: string) {
+    try {
+      const user = await databaseService.users.findOne({ username })
+      if (!user) {
+        throw new ErrorWithStatus({
+          message: 'Cannot find this user',
+          status: HTTP_STATUS.NOT_FOUND
+        })
+      }
+      return user
+    } catch (error) {
+      throw new ErrorWithStatus({
+        message: 'Cannot find this user',
+        status: HTTP_STATUS.NOT_FOUND
+      })
+    }
   }
 }
 

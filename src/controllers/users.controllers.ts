@@ -130,3 +130,24 @@ export const updateProfileController = async (
     result
   })
 }
+
+export const getUser = async (
+  req: Request<ParamsDictionary, any, VerifyForgotPasswordRequestBody>,
+  res: Response,
+  next: NextFunction
+) => {
+  const username = req.params.username
+  const user = await userService.getUser(username)
+
+  const result = {
+    username: user?.username,
+    email: user?.email,
+    website: user?.website,
+    bio: user?.bio
+  }
+
+  res.json({
+    message: USER_MESSAGES.GET_USER_SUCCESS,
+    result
+  })
+}

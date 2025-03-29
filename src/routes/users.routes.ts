@@ -3,6 +3,7 @@ import {
   emailVerifyValidatorController,
   forgotPasswordController,
   getProfile,
+  getUser,
   loginController,
   logoutController,
   registerController,
@@ -137,5 +138,12 @@ usersRouter.patch(
   ]),
   wrapRequestHandler(updateProfileController)
 )
+
+/**
+ * Description: get user by id
+ * Path: /:user
+ * Method: GET
+ */
+usersRouter.get('/:username', wrapRequestHandler(getUser))
 
 export default usersRouter

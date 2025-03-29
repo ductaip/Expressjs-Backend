@@ -26,17 +26,17 @@ const dateOfBirthSchema: ParamSchema = {
   errorMessage: USER_MESSAGES.DATE_OF_BIRTH_MUST_BE_ISO8601
 }
 
-const nameSchema: ParamSchema = {
+const usernameSchema: ParamSchema = {
   isString: {
-    errorMessage: USER_MESSAGES.NAME_IS_STRING
+    errorMessage: USER_MESSAGES.USERNAME_MUST_BE_STRING
   },
   notEmpty: {
-    errorMessage: USER_MESSAGES.NAME_IS_REQUIRED
+    errorMessage: USER_MESSAGES.USERNAME_LENGTH_IS_INVALID
   },
   trim: true,
   isLength: {
     options: { min: 4, max: 100 },
-    errorMessage: USER_MESSAGES.NAME_IS_NOT_VALID
+    errorMessage: USER_MESSAGES.USERNAME_LENGTH_IS_INVALID
   }
 }
 
@@ -91,7 +91,7 @@ export const loginValidator = validate(
 export const registerValidator = validate(
   checkSchema(
     {
-      name: nameSchema,
+      username: usernameSchema,
       email: {
         isEmail: {
           errorMessage: USER_MESSAGES.EMAIL_IS_REQUIRED
@@ -326,7 +326,7 @@ export const updateProfileValidator = validate(
   checkSchema(
     {
       name: {
-        ...nameSchema,
+        ...usernameSchema,
         optional: true,
         notEmpty: undefined
       },
