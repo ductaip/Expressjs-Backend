@@ -22,6 +22,8 @@ import {
 } from '~/middlewares/users.middlewares'
 import { wrapRequestHandler } from '~/utils/handlers'
 import rateLimit from 'express-rate-limit'
+import { filterMiddleware } from '~/middlewares/common.middlewares'
+import { UpdateProfileReqBody } from '~/models/requests/User.requests'
 
 const usersRouter = Router()
 
@@ -123,6 +125,16 @@ usersRouter.patch(
   accessTokenValidator,
   verifiedUserValidator,
   updateProfileValidator,
+  filterMiddleware<UpdateProfileReqBody>([
+    'name',
+    'date_of_birth',
+    'bio',
+    'location',
+    'website',
+    'username',
+    'avatar',
+    'cover_photo'
+  ]),
   wrapRequestHandler(updateProfileController)
 )
 

@@ -15,6 +15,7 @@ import databaseService from '~/services/database.services'
 import { ObjectId } from 'mongodb'
 import HTTP_STATUS from '~/constants/statusCodes'
 import User from '~/models/schemas/User.schema'
+import { pick } from 'lodash'
 
 export const loginController = async (
   req: Request<ParamsDictionary, any, LoginReqBody>,
@@ -123,7 +124,7 @@ export const updateProfileController = async (
   const { user_id } = req.decoded_authorization as TokenPayload
   const { body } = req
   const result = await userService.updateProfile(user_id, body)
-
+  console.log('body of controller', body)
   res.json({
     message: USER_MESSAGES.UPDATE_PROFILE_SUCCESS,
     result
