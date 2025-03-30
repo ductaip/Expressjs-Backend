@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import userService from '~/services/users.services'
 import { NextFunction, ParamsDictionary } from 'express-serve-static-core'
 import {
+  FollowReqBody,
   ForgotPasswordRequestBody,
   LoginReqBody,
   LogoutReqBody,
@@ -148,6 +149,20 @@ export const getUser = async (
 
   res.json({
     message: USER_MESSAGES.GET_USER_SUCCESS,
+    result
+  })
+}
+
+export const followController = async (
+  req: Request<ParamsDictionary, any, FollowReqBody>,
+  res: Response,
+  next: NextFunction
+) => {
+  const { user_id } = req.decoded_authorization as TokenPayload
+  const { followed_user_id } = req.body
+  const result = await userService.followers({ user_id, followed_user_id })
+  res.json({
+    status: HTTP_STATUS.OK,
     result
   })
 }

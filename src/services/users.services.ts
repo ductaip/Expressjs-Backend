@@ -12,6 +12,7 @@ import USER_MESSAGES from '~/constants/messages'
 import { ErrorWithStatus } from '~/models/Errors'
 import HTTP_STATUS from '~/constants/statusCodes'
 import { pick } from 'lodash'
+import Follower from '~/models/schemas/Follower.schema'
 
 class UsersService {
   private signAccessToken({ user_id, verify }: { user_id: string; verify: UserVerifyStatus }) {
@@ -276,6 +277,19 @@ class UsersService {
         message: 'Cannot find this user',
         status: HTTP_STATUS.NOT_FOUND
       })
+    }
+  }
+
+  async followers({ user_id, followed_user_id }: { user_id: string; followed_user_id: string }) {
+    await databaseService.followers.insertOne(
+      new Follower({
+        user_id: new ObjectId(user_id),
+        followed_user_id: new ObjectId(followed_user_id)
+      })
+    )
+
+    return {
+      message: USER_MESSAGES.FOLLOW_SUCCESS
     }
   }
 }

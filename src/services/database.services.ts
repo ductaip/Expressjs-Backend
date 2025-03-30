@@ -1,9 +1,9 @@
-
 import { MongoClient, Db, Collection } from 'mongodb'
 import { config } from 'dotenv'
 import User from '~/models/schemas/User.schema'
 import envConfig from '~/constants/config'
 import RefreshToken from '~/models/schemas/RefreshToken.schema'
+import Follower from '~/models/schemas/Follower.schema'
 config()
 const uri = `mongodb+srv://${envConfig.dbUsername}:${envConfig.dbPassword}@threads.tv53y.mongodb.net/?retryWrites=true&w=majority&appName=threads`
 
@@ -28,8 +28,12 @@ class DatabaseService {
     return this.db.collection(envConfig.dbUsersCollection as string)
   }
 
-  get refreshTokens() : Collection<RefreshToken> {
+  get refreshTokens(): Collection<RefreshToken> {
     return this.db.collection(envConfig.dbRefreshTokensCollection as string)
+  }
+
+  get followers(): Collection<Follower> {
+    return this.db.collection(envConfig.dbFollowersCollection as string)
   }
 }
 

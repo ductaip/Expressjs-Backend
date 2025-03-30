@@ -39,7 +39,8 @@ const USER_MESSAGES = Object.freeze({
   IMAGE_MUST_BE_STRING: 'Image must be string',
   IMAGE_LENGTH_IS_INVALID: 'Image length must be between 4 to 50 characters',
   UPDATE_PROFILE_SUCCESS: 'Update profile successfully',
-  GET_USER_SUCCESS: 'Get user by id successfully'
+  GET_USER_SUCCESS: 'Get user by id successfully',
+  FOLLOW_SUCCESS: 'You have followed this user successfully'
 })
 
 export default USER_MESSAGES
