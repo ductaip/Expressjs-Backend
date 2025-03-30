@@ -14,6 +14,7 @@ import {
 import {
   accessTokenValidator,
   emailVerifyTokenValidator,
+  followValidator,
   forgotPasswordValidator,
   loginValidator,
   refreshTokenValidator,
@@ -154,6 +155,12 @@ usersRouter.get('/:username', wrapRequestHandler(getUser))
  * Header: {Authorization: Bearer <access_token>}
  * Body: {followed_user_id: string}
  */
-usersRouter.post('/follow', accessTokenValidator, verifiedUserValidator, wrapRequestHandler(followController))
+usersRouter.post(
+  '/follow',
+  accessTokenValidator,
+  verifiedUserValidator,
+  followValidator,
+  wrapRequestHandler(followController)
+)
 
 export default usersRouter

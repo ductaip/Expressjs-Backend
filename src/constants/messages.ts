@@ -4,7 +4,7 @@ const USER_MESSAGES = Object.freeze({
   EMAIL_IS_EXISTS: 'Email already exists',
   NAME_IS_STRING: 'Name must be a string',
   NAME_IS_REQUIRED: 'Name is required',
-  USER_NOT_FOUND: 'Email or password is incorrect',
+  USER_NOT_FOUND: 'User is not found',
   NAME_IS_NOT_VALID: 'Name must be between 4 and 100 characters',
   PASSWORD_IS_REQUIRED: 'Password is required',
   PASSWORD_IS_NOT_VALID: 'Password must be between 4 and 50 characters',

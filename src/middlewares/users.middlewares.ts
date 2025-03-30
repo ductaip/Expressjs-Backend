@@ -400,3 +400,30 @@ export const verifiedUserValidator = async (req: Request, res: Response, next: N
   }
   next()
 }
+
+export const followValidator = validate(
+  checkSchema({
+    followed_user_id: {
+      custom: {
+        options: async (value: string, { req }) => {
+          if (!ObjectId.isValid(value)) {
+            throw new ErrorWithStatus({
+              message: USER_MESSAGES.USER_NOT_FOUND,
+              status: HTTP_STATUS.NOT_FOUND
+            })
+          }
+          const followed_user = await databaseService.users.findOne({
+            _id: new ObjectId(value)
+          })
+
+          if (!followed_user) {
+            throw new ErrorWithStatus({
+              message: USER_MESSAGES.USER_NOT_FOUND,
+              status: HTTP_STATUS.NOT_FOUND
+            })
+          }
+        }
+      }
+    }
+  })
+)

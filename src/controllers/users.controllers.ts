@@ -160,7 +160,7 @@ export const followController = async (
 ) => {
   const { user_id } = req.decoded_authorization as TokenPayload
   const { followed_user_id } = req.body
-  const result = await userService.followers({ user_id, followed_user_id })
+  const result = await userService.follow({ user_id, followed_user_id })
   res.json({
     status: HTTP_STATUS.OK,
     result

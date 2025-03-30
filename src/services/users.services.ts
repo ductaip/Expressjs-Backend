@@ -280,14 +280,23 @@ class UsersService {
     }
   }
 
-  async followers({ user_id, followed_user_id }: { user_id: string; followed_user_id: string }) {
-    await databaseService.followers.insertOne(
-      new Follower({
-        user_id: new ObjectId(user_id),
-        followed_user_id: new ObjectId(followed_user_id)
-      })
-    )
+  async follow({ user_id, followed_user_id }: { user_id: string; followed_user_id: string }) {
+    const follower = await databaseService.followers.findOne({
+      user_id: new ObjectId(user_id),
+      followed_user_id: new ObjectId(followed_user_id)
+    })
+    if (!follower) {
+      await databaseService.followers.insertOne(
+        new Follower({
+          user_id: new ObjectId(user_id),
+          followed_user_id: new ObjectId(followed_user_id)
+        })
+      )
 
+      return {
+        message: USER_MESSAGES.FOLLOW_SUCCESS
+      }
+    }
     return {
       message: USER_MESSAGES.FOLLOW_SUCCESS
     }
